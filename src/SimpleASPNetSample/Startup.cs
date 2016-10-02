@@ -7,11 +7,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SimpleASPNetSample.Models;
+using SimpleASPNetSample.Services;
 
 namespace SimpleASPNetSample
 {
     public class Startup
     {
+        
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -27,6 +31,8 @@ namespace SimpleASPNetSample
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
+
+           
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -34,21 +40,42 @@ namespace SimpleASPNetSample
         // This method gets called by the runtime. Use this method to add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
+           
+
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
+
+            services.AddLogging();
 
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, 
+            IHostingEnvironment env,
+            ILoggerFactory loggerFactory)
         {
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                loggerFactory.AddDebug(LogLevel.Information);
+            }
+            else
+            {
+                loggerFactory.AddDebug(LogLevel.Error);
+            }
 
             app.UseApplicationInsightsRequestTelemetry();
 
             app.UseApplicationInsightsExceptionTelemetry();
+
+            app.UseStaticFiles();
+
+            
 
             app.UseMvc();
         }
