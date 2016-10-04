@@ -15,12 +15,8 @@ namespace SimpleASPNetSample.Models
             RequestSentToAzure = false;
             MeasurementIn = "Inches";
             TimeOfMeasureMent = DateTime.UtcNow;
-
             PinGPIOTrigger = RaspberryPiGPI0Pin.GPIO20;
             PinGPIOEcho = RaspberryPiGPI0Pin.GPIO21;
-
-
-
         }
 
         
