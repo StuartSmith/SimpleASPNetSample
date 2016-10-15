@@ -17,11 +17,16 @@ namespace SimpleASPNetSample.Controllers.api
         {
             var ultraSonicService = UltraSonicSensorService.Instance;
             var AllRuns = ultraSonicService.RetrieveAllRuns();
-
             string output = JsonConvert.SerializeObject(AllRuns);
-
-
             return Ok(new { AllRuns }); //Ok(task.Result);
+        }
+
+        [HttpGet("IsUltraSonicRunning")]
+        public IActionResult IsUltraSonicRunning()
+        {
+            var ultraSonicService = UltraSonicSensorService.Instance;
+            bool returnvalue = ultraSonicService.IsUltraSonicServiceRunning();
+            return Ok(new { returnvalue }); //Ok(task.Result);
         }
 
         [HttpGet("UltraSonicRuns/{id}")]
@@ -29,34 +34,21 @@ namespace SimpleASPNetSample.Controllers.api
         {
             var ultraSonicService = UltraSonicSensorService.Instance;
             var RunSpecified = ultraSonicService.RetrieveUltraSonicRun(id);
-
             if (RunSpecified == null)
                 return NotFound();
 
             return Ok(new { RunSpecified }); //Ok(task.Result);
         }
 
+
         [HttpGet("lastrun")]
         public IActionResult LastRun()
         {
-
             var ultraSonicService = UltraSonicSensorService.Instance;
             var lastRun = ultraSonicService.RetrieveLatestUltraSonicRun();
-
             return Ok(new { lastRun });
         }
-
-        [HttpPost("startrun")]
-        public IActionResult StartRun([FromBody] UltraSonicRunRequest runrequest)
-        {
-
-            var ultraSonicService = UltraSonicSensorService.Instance;
-            bool runstarted =  ultraSonicService.StartUltraSonicRun(runrequest);
-
-          
-           
-            return Ok(new { runstarted });
-        }
+       
 
         [HttpDelete("RemoveUltraSonicRuns")]
         public IActionResult RemoveUltraSonicRuns()
@@ -64,6 +56,15 @@ namespace SimpleASPNetSample.Controllers.api
            var ultraSonicService = UltraSonicSensorService.Instance;
            long RunRemovalReturned = ultraSonicService.RemoveAllUltraSonicRuns();          
             return Ok(new { RunRemovalReturned });
+        }
+
+
+        [HttpPost("startrun")]
+        public IActionResult StartRun([FromBody] UltraSonicRunRequest runrequest)
+        {
+            var ultraSonicService = UltraSonicSensorService.Instance;
+            bool runstarted = ultraSonicService.StartUltraSonicRun(runrequest);
+            return Ok(new { runstarted });
         }
     }
 }

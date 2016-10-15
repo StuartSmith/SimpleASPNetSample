@@ -6,7 +6,6 @@ var UltraSonicStatus = function (data, status) {
 }
 
 
-
 var UltraSonicStartStatus = function (data, status) { 
     $("#UltraSonicStartStatusResult").html(data);
 }
@@ -16,18 +15,26 @@ var UltraSonicStatusLastRun = function (data, status) {
     $("#UltraSonicLatestRunResult").html(data);
 }
 
-var UltraSonicRemovalResult = function (data, status) {
-   
+var UltraSonicRemovalResult = function (data, status) {    
     $("#UltraSonicRemovalResult").html(data);
+}
+
+var IsUltraSonicRunningResult = function (data, status) {
+    $("#IsUltraSonicRunningResult").html(data);
 }
 
 
 
 $(document).ready(function () {
 
-    //____________________________________________________________________________
-    //Sonic sensor
-    //____________________________________________________________________________   
+    
+
+    $("#ButtonIsUltraSonicsRunning").click(function () {
+        var url = "/api/ultrasonic/IsUltraSonicRunning?=" + new Date().getTime();
+        aClient = new HttpClient();
+
+        aClient.get(url, IsUltraSonicRunningResult);
+    });
 
     $("#ButtonUltraSonicStatus").click(function () {
         var url = "/api/ultrasonic/UltraSonicRuns?=" + new Date().getTime();
@@ -37,7 +44,7 @@ $(document).ready(function () {
 
     $("#ButtonUltraSonicStartRun").click(function () {        
         var WebServiceUrl = "/api/ultrasonic/startrun";
-        var RunData = { "TimeInSecondsToRunSensor": 3 };        
+        var RunData = { "TimeInSecondsToRunSensor": 10 };        
         aClient = new HttpClient();
         aClient.put(WebServiceUrl, RunData, UltraSonicStartStatus);
     });
@@ -55,5 +62,7 @@ $(document).ready(function () {
         aClient = new HttpClient();
         aClient.delete(url, UltraSonicRemovalResult);
     });
+
+  
 
 });

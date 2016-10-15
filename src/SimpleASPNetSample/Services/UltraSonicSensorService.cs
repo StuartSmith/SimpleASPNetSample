@@ -64,7 +64,7 @@ namespace SimpleASPNetSample.Services
 
         public bool IsUltraSonicServiceRunning()
         {
-            throw new NotImplementedException();
+            return (_isUltraSonicRunning);           
         }
 
 
@@ -171,6 +171,7 @@ namespace SimpleASPNetSample.Services
                        
                         //Set values from Sonic Sensor Run
                         measurement.Run = SonicSensorRun;
+                        measurement.MeasurementGUID = Guid.NewGuid().ToString();
                         measurement.UltraSonicSensorRunId = SonicSensorRun.SonicId;
                         measurement.SonicGUID = SonicSensorRun.SonicGUID;
                                              

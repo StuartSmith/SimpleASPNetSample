@@ -10,6 +10,8 @@ namespace SimpleASPNetSample.Models
 {
     public class UltraSonicSensorRunMeasurement: IUltraSonicSensorRunMeasurement
     {
+      
+
         [Key]
         public int SonicMeasurementId { get; set; }
         public DateTime TimeOfMeasurment { get; set; }
