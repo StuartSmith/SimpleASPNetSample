@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SimpleASPNetSample.Models
 {
-    public class UltraSonicSensorRunMeasurement
+    public class UltraSonicSensorRunMeasurement: IUltraSonicSensorRunMeasurement
     {
         [Key]
         public int SonicMeasurementId { get; set; }
@@ -16,5 +16,8 @@ namespace SimpleASPNetSample.Models
         public double MeasurementDistance { get; set; }
         public int UltraSonicSensorRunId { get; set; }
         public UltraSonicSensorRun Run { get; set; }
+        public string SonicGUID { get; set; }
+        public string MeasurementGUID { get; set; }
+       
     }
 }

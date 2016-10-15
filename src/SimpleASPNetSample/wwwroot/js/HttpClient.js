@@ -17,9 +17,9 @@
         var anHttpRequest = new XMLHttpRequest();
 
         anHttpRequest.onreadystatechange = function () {
-            //if ((anHttpRequest.readyState == 4 && anHttpRequest.status == 200) ||
-            //    (anHttpRequest.readyState == 4 && anHttpRequest.status == 201))
-            //    aCallback(anHttpRequest.responseText);
+            if ((anHttpRequest.readyState == 4 && anHttpRequest.status == 200) ||
+                (anHttpRequest.readyState == 4 && anHttpRequest.status == 201))
+                aCallback(anHttpRequest.responseText);
         }
 
         var jsondata = JSON.stringify(data);
@@ -32,6 +32,20 @@
 
         anHttpRequest.send(jsondata);
 
-        aCallback(jsondata);
+        //aCallback(jsondata);
+    }
+
+    this.delete = function (aUrl, aCallback) {
+       
+        var anHttpRequest = new XMLHttpRequest();
+        anHttpRequest.onreadystatechange = function () {
+            if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
+                aCallback(anHttpRequest.responseText);
+        }
+
+        anHttpRequest.open("DELETE", aUrl, true);
+        anHttpRequest.setRequestHeader('Cache-Control', 'no-cache');
+        anHttpRequest.send(null);
+
     }
 }

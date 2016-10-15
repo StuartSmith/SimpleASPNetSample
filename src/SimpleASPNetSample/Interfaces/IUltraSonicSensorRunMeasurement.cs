@@ -12,6 +12,9 @@ namespace SimpleASPNetSample.Interfaces
         DateTime TimeOfMeasurment { get; set; }
         double MeasurementDistance { get; set; }
         int UltraSonicSensorRunId { get; set; }
-        
+        string SonicGUID { get; set; }
+        string MeasurementGUID { get; set; }
+
+
     }
 }

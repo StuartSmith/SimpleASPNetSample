@@ -13,9 +13,9 @@ namespace SimpleASPNetSample.Interfaces
        string MeasurementIn { get; set; }
        double TotalDistance { get; set; }
        RaspberryPiGPI0Pin PinGPIOTrigger { get; set; }
-       RaspberryPiGPI0Pin PinGPIOEcho { get; set; }
-               
+       RaspberryPiGPI0Pin PinGPIOEcho { get; set; }               
        int SonicId { get; set; }
+       string SonicGUID { get; set; }
        DateTime RunDate { get; set; }
        List<IUltraSonicSensorRunMeasurement> SonicMeasurements { get; set; }
     }

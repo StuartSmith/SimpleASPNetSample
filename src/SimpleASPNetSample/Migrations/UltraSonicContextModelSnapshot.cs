@@ -32,7 +32,7 @@ namespace SimpleASPNetSample.Migrations
 
                     b.Property<bool>("SendRequestToAzure");
 
-                    b.Property<DateTime>("TimeOfMeasureMent");
+                    b.Property<string>("SonicGUID");
 
                     b.Property<double>("TotalDistance");
 
@@ -47,6 +47,10 @@ namespace SimpleASPNetSample.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<double>("MeasurementDistance");
+
+                    b.Property<string>("MeasurementGUID");
+
+                    b.Property<string>("SonicGUID");
 
                     b.Property<DateTime>("TimeOfMeasurment");
 

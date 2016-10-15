@@ -19,6 +19,7 @@ namespace SimpleASPNetSample.Models
             PinGPIOTrigger = RaspberryPiGPI0Pin.GPIO20;
             PinGPIOEcho = RaspberryPiGPI0Pin.GPIO21;
             List<UltraSonicSensorRunMeasurement> SonicMeasurements = new List<UltraSonicSensorRunMeasurement>();
+            SonicGUID = Guid.NewGuid().ToString();
         }
 
 
@@ -29,6 +30,7 @@ namespace SimpleASPNetSample.Models
         public RaspberryPiGPI0Pin PinGPIOEcho { get; set; }
         [Key]
         public int SonicId { get; set; }
+        public string SonicGUID { get; set; }
         public DateTime RunDate { get; set; }
         public List<UltraSonicSensorRunMeasurement> SonicMeasurements { get; set; }
     }

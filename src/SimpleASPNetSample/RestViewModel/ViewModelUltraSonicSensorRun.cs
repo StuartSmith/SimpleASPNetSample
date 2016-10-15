@@ -12,8 +12,7 @@ namespace SimpleASPNetSample.RestViewModel
     {
 
         public ViewModelUltraSonicSensorRun()
-        {
-        }
+        { }
 
         public ViewModelUltraSonicSensorRun(UltraSonicSensorRun sensor)
         {
@@ -24,6 +23,7 @@ namespace SimpleASPNetSample.RestViewModel
             PinGPIOEcho = sensor.PinGPIOEcho;
             SonicId = sensor.SonicId;
             RunDate = sensor.RunDate;
+            SonicGUID = sensor.SonicGUID;
          }
 
         public bool RequestSentToAzure { get; set; }
@@ -32,6 +32,7 @@ namespace SimpleASPNetSample.RestViewModel
         public RaspberryPiGPI0Pin PinGPIOTrigger { get; set; }
         public RaspberryPiGPI0Pin PinGPIOEcho { get; set; }        
         public int SonicId { get; set; }
+        public string SonicGUID { get; set; }
         public DateTime RunDate { get; set; }
         public List<IUltraSonicSensorRunMeasurement> SonicMeasurements { get; set; }
     }

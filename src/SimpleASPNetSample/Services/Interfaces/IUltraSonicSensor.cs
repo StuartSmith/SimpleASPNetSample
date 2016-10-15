@@ -19,6 +19,6 @@ namespace SimpleASPNetSample.Services.Interfaces
 
         bool IsUltraSonicServiceRunning();
 
-        bool RemoveAllUltraSonicRuns();
+        long RemoveAllUltraSonicRuns();
     }
 }

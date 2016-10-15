@@ -20,7 +20,7 @@ namespace SimpleASPNetSample.Migrations
                     RequestSentToAzure = table.Column<bool>(nullable: false),
                     RunDate = table.Column<DateTime>(nullable: false),
                     SendRequestToAzure = table.Column<bool>(nullable: false),
-                    TimeOfMeasureMent = table.Column<DateTime>(nullable: false),
+                    SonicGUID = table.Column<string>(nullable: true),
                     TotalDistance = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
@@ -35,6 +35,8 @@ namespace SimpleASPNetSample.Migrations
                     SonicMeasurementId = table.Column<int>(nullable: false)
                         .Annotation("Autoincrement", true),
                     MeasurementDistance = table.Column<double>(nullable: false),
+                    MeasurementGUID = table.Column<string>(nullable: true),
+                    SonicGUID = table.Column<string>(nullable: true),
                     TimeOfMeasurment = table.Column<DateTime>(nullable: false),
                     UltraSonicSensorRunId = table.Column<int>(nullable: false)
                 },

@@ -22,9 +22,9 @@ namespace SimpleASPNetSample.Services
         private Action<UltraSonicRunRequest> _ActionUltraSonicRun;
 
         private UltraSonicSensorService()
-        {
-           
+        {         
         }
+
 
         private ViewModelUltraSonicSensorRun ConvertSensorRunModelToViewModel(UltraSonicSensorRun ultraSonicSensorRun)
         {
@@ -68,9 +68,18 @@ namespace SimpleASPNetSample.Services
         }
 
 
-        public bool RemoveAllUltraSonicRuns()
+        public long RemoveAllUltraSonicRuns()
         {
-            throw new NotImplementedException();
+            long ultraSonicRunsRemoved = 0;
+            using (var db = new UltraSonicContext())
+            {
+                ultraSonicRunsRemoved  = db.UltraSonicSensorRuns.Count();
+                db.UltraSonicSensorRunMeasurements.RemoveRange(db.UltraSonicSensorRunMeasurements);
+                db.UltraSonicSensorRuns.RemoveRange(db.UltraSonicSensorRuns);
+                db.SaveChangesAsync();
+            }
+
+            return ultraSonicRunsRemoved;
         }
 
 
@@ -81,13 +90,11 @@ namespace SimpleASPNetSample.Services
 
             using (var db = new UltraSonicContext())
             {
-                LastUltraSonic = (from sensorRun in db.UltraSonicSensorRuns                                  
-                                  orderby sensorRun.RunDate
-                                  select sensorRun).FirstOrDefault() ;               
+                var qResult = (from sensorRun in db.UltraSonicSensorRuns                                  
+                                  orderby sensorRun.RunDate descending
+                                  select sensorRun);
+                viewModelLastUltraSonic = ConvertSensorRunModelToViewModel(qResult.FirstOrDefault());
             }
-
-            viewModelLastUltraSonic = ConvertSensorRunModelToViewModel(LastUltraSonic);
-
             return viewModelLastUltraSonic;
         }
 
@@ -157,16 +164,22 @@ namespace SimpleASPNetSample.Services
                         Task.Delay(100).Wait();
                         Debug.WriteLine($"Hello From Thread time elapsed {stopWatch.ElapsedMilliseconds}");
                         UltraSonicSensorRunMeasurement measurement = new UltraSonicSensorRunMeasurement();
-                        measurement.Run = SonicSensorRun;
+                      
                         lastMeasurement += .1;
                         measurement.MeasurementDistance = lastMeasurement;
                         measurement.TimeOfMeasurment = DateTime.Now;
+                       
+                        //Set values from Sonic Sensor Run
+                        measurement.Run = SonicSensorRun;
+                        measurement.UltraSonicSensorRunId = SonicSensorRun.SonicId;
+                        measurement.SonicGUID = SonicSensorRun.SonicGUID;
+                                             
                         SonicSensorRun.SonicMeasurements.Add(measurement);
                     }
                     //save UltraSonic Run to sqllite database
                     using (var db = new UltraSonicContext())
                     {
-                        db.UltraSonicSensorRuns.Add(SonicSensorRun);
+                       var SonicEnity = db.UltraSonicSensorRuns.Add(SonicSensorRun);
                         foreach (var sonicMeasurement in SonicSensorRun.SonicMeasurements)
                         {
                             db.UltraSonicSensorRunMeasurements.Add(sonicMeasurement);

@@ -8,8 +8,8 @@ using SimpleASPNetSample.Context;
 namespace SimpleASPNetSample.Migrations
 {
     [DbContext(typeof(UltraSonicContext))]
-    [Migration("20161015003059_RemoveRunDateMigration")]
-    partial class RemoveRunDateMigration
+    [Migration("20161015155232_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,7 +33,7 @@ namespace SimpleASPNetSample.Migrations
 
                     b.Property<bool>("SendRequestToAzure");
 
-                    b.Property<DateTime>("TimeOfMeasureMent");
+                    b.Property<string>("SonicGUID");
 
                     b.Property<double>("TotalDistance");
 
@@ -48,6 +48,10 @@ namespace SimpleASPNetSample.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<double>("MeasurementDistance");
+
+                    b.Property<string>("MeasurementGUID");
+
+                    b.Property<string>("SonicGUID");
 
                     b.Property<DateTime>("TimeOfMeasurment");
 

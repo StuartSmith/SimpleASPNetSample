@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace SimpleASPNetSample.Controllers.api
 {
     [Route("api/[controller]")]
-    public class UltraSonicController:Controller
+    public class UltraSonicController : Controller
     {
         [HttpGet("UltraSonicRuns")]
         public IActionResult GetStatus()
@@ -33,7 +33,7 @@ namespace SimpleASPNetSample.Controllers.api
             if (RunSpecified == null)
                 return NotFound();
 
-            return Ok(new { RunSpecified } ); //Ok(task.Result);
+            return Ok(new { RunSpecified }); //Ok(task.Result);
         }
 
         [HttpGet("lastrun")]
@@ -41,21 +41,29 @@ namespace SimpleASPNetSample.Controllers.api
         {
 
             var ultraSonicService = UltraSonicSensorService.Instance;
-            var lastRun =  ultraSonicService.RetrieveLatestUltraSonicRun();
-            
-            return Ok((new { lastRun });
+            var lastRun = ultraSonicService.RetrieveLatestUltraSonicRun();
+
+            return Ok(new { lastRun });
         }
 
         [HttpPost("startrun")]
         public IActionResult StartRun([FromBody] UltraSonicRunRequest runrequest)
-        {           
+        {
 
             var ultraSonicService = UltraSonicSensorService.Instance;
-            ultraSonicService.StartUltraSonicRun(runrequest);
-          
-            bool bResult = ultraSonicService.StartUltraSonicRun(runrequest);
+            bool runstarted =  ultraSonicService.StartUltraSonicRun(runrequest);
 
-            return Ok(true);
+          
+           
+            return Ok(new { runstarted });
+        }
+
+        [HttpDelete("RemoveUltraSonicRuns")]
+        public IActionResult RemoveUltraSonicRuns()
+        {
+           var ultraSonicService = UltraSonicSensorService.Instance;
+           long RunRemovalReturned = ultraSonicService.RemoveAllUltraSonicRuns();          
+            return Ok(new { RunRemovalReturned });
         }
     }
 }
