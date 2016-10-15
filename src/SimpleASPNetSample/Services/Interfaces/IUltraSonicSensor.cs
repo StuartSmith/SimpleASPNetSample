@@ -8,7 +8,19 @@ namespace SimpleASPNetSample.Services.Interfaces
 {
     interface IUltraSonicSensor
     {
-        Task<List<UltraSonicSensor>> RetrieveSensorsData(UltraSonicSensorRequest request); 
-                
+        UltraSonicSensorRun RetrieveLatestUltraSonicRun();
+
+        List<UltraSonicSensorRun> RetrieveAllRuns();
+
+        UltraSonicSensorRun RetrieveUltraSonicRun(int RunId);
+
+        bool StartUltraSonicRun(UltraSonicRunRequest runrequest);
+
+        bool IsUltraSonicServiceRunning();
+
+        
+
+
+
     }
 }

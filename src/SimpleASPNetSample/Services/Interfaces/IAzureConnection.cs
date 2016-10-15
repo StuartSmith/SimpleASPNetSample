@@ -34,7 +34,7 @@ namespace SimpleASPNetSample.Services.Interfaces
 
         Task<bool> SendServoData(List<Servo> data);
 
-        Task<bool> SendUltraSonicData(List<UltraSonicSensor> data);
+        //Task<bool> SendUltraSonicData(List<UltraSonicSensor> data);
 
         Task<bool> SendLightData(List<Light> data);
 

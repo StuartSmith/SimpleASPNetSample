@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
+using SimpleASPNetSample.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace SimpleASPNetSample
 {
@@ -12,6 +14,12 @@ namespace SimpleASPNetSample
     {
         public static void Main(string[] args)
         {
+            using (var db = new UltraSonicContext())
+            {
+                db.Database.Migrate();
+            }
+
+
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())

@@ -69,21 +69,21 @@ namespace SimpleASPNetSample.Services
         }
 
 
-        public async Task<bool> SendUltraSonicData(List<UltraSonicSensor> data)
-        {
-            if ((AllowSendingofData == true) && (this.AllowSendingUltraSonicData == true))
-            {
-                throw new NotImplementedException();
-            }
+        //public async Task<bool> SendUltraSonicData(List<UltraSonicSensor> data)
+        //{
+        //    if ((AllowSendingofData == true) && (this.AllowSendingUltraSonicData == true))
+        //    {
+        //        throw new NotImplementedException();
+        //    }
 
-            Task<bool> SendData = Task<bool>.Factory.StartNew(() =>
-            {
-                return true;
+        //    Task<bool> SendData = Task<bool>.Factory.StartNew(() =>
+        //    {
+        //        return true;
 
-            });
+        //    });
 
-            return SendData.Result;
-        }
+        //    return SendData.Result;
+        //}
 
         public bool SetAzureConfiguration(AzurePiConfiguraton azureConfig)
         {

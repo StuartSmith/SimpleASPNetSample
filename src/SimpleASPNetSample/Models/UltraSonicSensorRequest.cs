@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 namespace SimpleASPNetSample.Models
 {
 
-    public class UltraSonicSensorRequest
-    {
+    public class UltraSonicSensorRequest    {
 
         public UltraSonicSensorRequest()
         {

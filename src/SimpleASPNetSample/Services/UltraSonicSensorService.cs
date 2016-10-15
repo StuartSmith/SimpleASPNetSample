@@ -4,6 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using SimpleASPNetSample.Models;
 using SimpleASPNetSample.Services.Interfaces;
+using SimpleASPNetSample.Threading;
+using System.Threading;
+using System.Diagnostics;
+using SimpleASPNetSample.Context;
 
 namespace SimpleASPNetSample.Services
 {
@@ -11,9 +15,13 @@ namespace SimpleASPNetSample.Services
     {
 
         private static UltraSonicSensorService _instance;
+        private static Task<bool> _BackgroundThread;
+        private static bool _isUltraSonicRunning;
+        private Action<UltraSonicRunRequest> _ActionUltraSonicRun;
 
         private UltraSonicSensorService()
         {
+           
         }
 
         public static UltraSonicSensorService Instance
@@ -27,43 +35,105 @@ namespace SimpleASPNetSample.Services
                 return _instance;
             }
         }
-
-        
-        private UltraSonicSensor CreateUltraSonicSensorFromRequest(UltraSonicSensorRequest request)
+       
+        public UltraSonicSensorRun RetrieveLatestUltraSonicRun()
         {
-            UltraSonicSensor ultrasonicSensor = new UltraSonicSensor();
-            ultrasonicSensor.SendRequestToAzure = request.SendRequestToAzure;
-            return ultrasonicSensor;
+            UltraSonicSensorRun LastUltraSonic = null;
 
-        }
-        
-
-        private async Task<List<UltraSonicSensor>> GetDatafromSensor(UltraSonicSensorRequest request)
-        {
-
-            Task<List<UltraSonicSensor>> RetrieveSensors = Task<List<UltraSonicSensor>>.Factory.StartNew(() =>
+            using (var db = new UltraSonicContext())
             {
-                UltraSonicSensor ultrasonicSensor = CreateUltraSonicSensorFromRequest(request);
-                var sensors = new List<UltraSonicSensor>();
-                sensors.Add(ultrasonicSensor);
-                return sensors;
+                LastUltraSonic = (from sensorRun in db.UltraSonicSensorRuns                                  
+                                  orderby sensorRun.RunDate
+                                  select sensorRun).FirstOrDefault() ;
+                
+                if (LastUltraSonic != null)
+                      LastUltraSonic.SonicMeasurements = (from measurement in db.UltraSonicSensorRunMeasurements
+                                                    where measurement.UltraSonicSensorRunId == LastUltraSonic.SonicId
+                                                    select measurement).ToList<UltraSonicSensorRunMeasurement>();              
 
-            });
-
-            if (request.SendRequestToAzure)
-            {
-                await AzureConnectionService.Instance.SendUltraSonicData(RetrieveSensors.Result);
             }
 
-            return RetrieveSensors.Result;
+            return LastUltraSonic;
         }
 
+      
 
-        public async Task<List<UltraSonicSensor>> RetrieveSensorsData(UltraSonicSensorRequest request)
+        public bool StartUltraSonicRun(UltraSonicRunRequest runrequest)
         {
-            return await GetDatafromSensor(request);
+            bool StartUltraSonicRunResult = false;
+
+            if (!(_isUltraSonicRunning))
+            {
+                _isUltraSonicRunning = true;
+                StartUltraSonicRunResult = true;
+
+                _BackgroundThread = new Task<bool>(() =>
+                {
+                    Stopwatch stopWatch = new Stopwatch();
+                    stopWatch.Start();
+
+                    double lastMeasurement = 5;
+                    UltraSonicSensorRun SonicSensorRun = new UltraSonicSensorRun();
+                    SonicSensorRun.SonicMeasurements = new List<UltraSonicSensorRunMeasurement>();
+
+                    while (stopWatch.ElapsedMilliseconds < runrequest.TimeInSecondsToRunSensor * 1000)
+                    {
+                        Task.Delay(100).Wait();
+                        Debug.WriteLine($"Hello From Thread time elapsed {stopWatch.ElapsedMilliseconds}" );
+                        UltraSonicSensorRunMeasurement measurement = new UltraSonicSensorRunMeasurement();
+                        measurement.Run = SonicSensorRun;
+                        lastMeasurement += .1;
+                        measurement.MeasurementDistance = lastMeasurement;
+                        measurement.TimeOfMeasurment = DateTime.Now;
+                        SonicSensorRun.SonicMeasurements.Add(measurement);
+                    }
+                    //save UltraSonic Run to sqllite database
+                    using (var db = new UltraSonicContext())
+                    {
+                        db.UltraSonicSensorRuns.Add(SonicSensorRun);
+                        foreach (var sonicMeasurement in SonicSensorRun.SonicMeasurements)
+                        {
+                            db.UltraSonicSensorRunMeasurements.Add(sonicMeasurement);
+                        }
+                        db.SaveChanges();
+                    }
+                    _isUltraSonicRunning = false;
+                    return true;
+                });
+                _BackgroundThread.Start();
+            }
+           
+            return StartUltraSonicRunResult;
         }
 
-     
+        public List<UltraSonicSensorRun> RetrieveAllRuns()
+        {
+            List<UltraSonicSensorRun> ultraSonicRuns;
+
+            using (var db = new UltraSonicContext())
+            {
+                ultraSonicRuns = (from sensorRun in db.UltraSonicSensorRuns                                  
+                                  select sensorRun).ToList<UltraSonicSensorRun>();
+
+                foreach (var ultrarun in ultraSonicRuns)
+                {
+                    ultrarun.SonicMeasurements = (from measurement in db.UltraSonicSensorRunMeasurements
+                                                        where measurement.UltraSonicSensorRunId == ultrarun.SonicId
+                                                        select measurement).ToList<UltraSonicSensorRunMeasurement>();
+                }
+            }
+
+            return ultraSonicRuns;
+        }
+
+        public UltraSonicSensorRun RetrieveUltraSonicRun(int RunId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsUltraSonicServiceRunning()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

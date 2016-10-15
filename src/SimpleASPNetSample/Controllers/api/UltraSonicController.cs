@@ -15,12 +15,40 @@ namespace SimpleASPNetSample.Controllers.api
         public IActionResult GetStatus()
         {
 
-            var ultraSonic = UltraSonicSensorService.Instance;
-            UltraSonicSensorRequest NonAzureRetrieval = new UltraSonicSensorRequest();
-            var task = ultraSonic.RetrieveSensorsData(NonAzureRetrieval);
-            task.Wait();
+            //var ultraSonic = UltraSonicSensorService.Instance;
+            //UltraSonicSensorRequest NonAzureRetrieval = new UltraSonicSensorRequest();
+            //var task = ultraSonic.RetrieveSensorsData(NonAzureRetrieval);
+            //task.Wait();
 
-            return Ok(task.Result);
+            return Ok(new { Amount = 108, Message = "Hello" }); //Ok(task.Result);
+        }
+
+        [HttpGet("lastrun")]
+        public IActionResult LastRun()
+        {
+
+            var ultraSonicService = UltraSonicSensorService.Instance;
+            var lastRun =  ultraSonicService.RetrieveLatestUltraSonicRun();
+            
+            return Ok(lastRun);
+        }
+
+        [HttpPost("startrun")]
+        public IActionResult StartRun([FromBody] UltraSonicRunRequest runrequest)
+        {
+           
+
+            var ultraSonicService = UltraSonicSensorService.Instance;
+            ultraSonicService.StartUltraSonicRun(runrequest);
+            //UltraSonicSensorRequest UltraSonicRequest = new UltraSonicSensorRequest();
+
+
+            //var task = ultraSonic.RetrieveSensorsData(NonAzureRetrieval);
+            //task.Wait();
+
+            bool bResult = ultraSonicService.StartUltraSonicRun(runrequest);
+
+            return Ok(true);
         }
     }
 }
