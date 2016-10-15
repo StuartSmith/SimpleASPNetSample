@@ -8,6 +8,8 @@ using SimpleASPNetSample.Threading;
 using System.Threading;
 using System.Diagnostics;
 using SimpleASPNetSample.Context;
+using SimpleASPNetSample.RestViewModel;
+using SimpleASPNetSample.Interfaces;
 
 namespace SimpleASPNetSample.Services
 {
@@ -24,6 +26,29 @@ namespace SimpleASPNetSample.Services
            
         }
 
+        private ViewModelUltraSonicSensorRun ConvertSensorRunModelToViewModel(UltraSonicSensorRun ultraSonicSensorRun)
+        {
+            ViewModelUltraSonicSensorRun viewModelLastUltraSonic = null;
+            using (var db = new UltraSonicContext())
+            {
+                if (ultraSonicSensorRun != null)
+                {
+                    viewModelLastUltraSonic = new ViewModelUltraSonicSensorRun(ultraSonicSensorRun);
+
+                    ultraSonicSensorRun.SonicMeasurements = (from measurement in db.UltraSonicSensorRunMeasurements
+                                                             where measurement.UltraSonicSensorRunId == ultraSonicSensorRun.SonicId
+                                                             select measurement).ToList<UltraSonicSensorRunMeasurement>();
+                    viewModelLastUltraSonic.SonicMeasurements = new List<IUltraSonicSensorRunMeasurement>();
+                    foreach (var measurement in ultraSonicSensorRun.SonicMeasurements)
+                    {
+                        viewModelLastUltraSonic.SonicMeasurements.Add(new ViewModelUltraSonicSensorRunMeasurement(measurement));
+                    }
+                }
+            }
+            return viewModelLastUltraSonic;
+        }
+
+
         public static UltraSonicSensorService Instance
         {
             get
@@ -35,28 +60,79 @@ namespace SimpleASPNetSample.Services
                 return _instance;
             }
         }
-       
-        public UltraSonicSensorRun RetrieveLatestUltraSonicRun()
+
+
+        public bool IsUltraSonicServiceRunning()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public bool RemoveAllUltraSonicRuns()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ViewModelUltraSonicSensorRun RetrieveLatestUltraSonicRun()
         {
             UltraSonicSensorRun LastUltraSonic = null;
+            ViewModelUltraSonicSensorRun viewModelLastUltraSonic = null;
 
             using (var db = new UltraSonicContext())
             {
                 LastUltraSonic = (from sensorRun in db.UltraSonicSensorRuns                                  
                                   orderby sensorRun.RunDate
-                                  select sensorRun).FirstOrDefault() ;
-                
-                if (LastUltraSonic != null)
-                      LastUltraSonic.SonicMeasurements = (from measurement in db.UltraSonicSensorRunMeasurements
-                                                    where measurement.UltraSonicSensorRunId == LastUltraSonic.SonicId
-                                                    select measurement).ToList<UltraSonicSensorRunMeasurement>();              
-
+                                  select sensorRun).FirstOrDefault() ;               
             }
 
-            return LastUltraSonic;
+            viewModelLastUltraSonic = ConvertSensorRunModelToViewModel(LastUltraSonic);
+
+            return viewModelLastUltraSonic;
         }
 
-      
+       
+        public List<ViewModelUltraSonicSensorRun> RetrieveAllRuns()
+        {
+            List<UltraSonicSensorRun> ultraSonicRuns;
+            List<ViewModelUltraSonicSensorRun> viewModelUltraSonicSensorRuns = null;
+
+            using (var db = new UltraSonicContext())
+            {
+                ultraSonicRuns = (from sensorRun in db.UltraSonicSensorRuns
+                                  select sensorRun).ToList<UltraSonicSensorRun>();
+            }
+
+            if (ultraSonicRuns.Any())
+            {
+                viewModelUltraSonicSensorRuns = new List<ViewModelUltraSonicSensorRun>();
+                foreach (var ultraSonicRun in ultraSonicRuns)
+                {
+                    viewModelUltraSonicSensorRuns.Add(ConvertSensorRunModelToViewModel(ultraSonicRun));
+                }
+
+            }            
+
+            return viewModelUltraSonicSensorRuns;
+        }
+
+
+        public ViewModelUltraSonicSensorRun RetrieveUltraSonicRun(long RunId)
+        {
+            ViewModelUltraSonicSensorRun viewModelLastUltraSonic = null;
+            UltraSonicSensorRun LastUltraSonic = null;
+            using (var db = new UltraSonicContext())
+            {
+                LastUltraSonic = (from sensorRun in db.UltraSonicSensorRuns
+                                  where sensorRun.SonicId == RunId
+                                  select sensorRun).FirstOrDefault();
+            }
+
+            viewModelLastUltraSonic = ConvertSensorRunModelToViewModel(LastUltraSonic);
+
+            return viewModelLastUltraSonic;
+        }
+
 
         public bool StartUltraSonicRun(UltraSonicRunRequest runrequest)
         {
@@ -79,7 +155,7 @@ namespace SimpleASPNetSample.Services
                     while (stopWatch.ElapsedMilliseconds < runrequest.TimeInSecondsToRunSensor * 1000)
                     {
                         Task.Delay(100).Wait();
-                        Debug.WriteLine($"Hello From Thread time elapsed {stopWatch.ElapsedMilliseconds}" );
+                        Debug.WriteLine($"Hello From Thread time elapsed {stopWatch.ElapsedMilliseconds}");
                         UltraSonicSensorRunMeasurement measurement = new UltraSonicSensorRunMeasurement();
                         measurement.Run = SonicSensorRun;
                         lastMeasurement += .1;
@@ -102,38 +178,10 @@ namespace SimpleASPNetSample.Services
                 });
                 _BackgroundThread.Start();
             }
-           
+
             return StartUltraSonicRunResult;
         }
 
-        public List<UltraSonicSensorRun> RetrieveAllRuns()
-        {
-            List<UltraSonicSensorRun> ultraSonicRuns;
-
-            using (var db = new UltraSonicContext())
-            {
-                ultraSonicRuns = (from sensorRun in db.UltraSonicSensorRuns                                  
-                                  select sensorRun).ToList<UltraSonicSensorRun>();
-
-                foreach (var ultrarun in ultraSonicRuns)
-                {
-                    ultrarun.SonicMeasurements = (from measurement in db.UltraSonicSensorRunMeasurements
-                                                        where measurement.UltraSonicSensorRunId == ultrarun.SonicId
-                                                        select measurement).ToList<UltraSonicSensorRunMeasurement>();
-                }
-            }
-
-            return ultraSonicRuns;
-        }
-
-        public UltraSonicSensorRun RetrieveUltraSonicRun(int RunId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsUltraSonicServiceRunning()
-        {
-            throw new NotImplementedException();
-        }
+     
     }
 }

@@ -3,24 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SimpleASPNetSample.Models;
+using SimpleASPNetSample.RestViewModel;
 
 namespace SimpleASPNetSample.Services.Interfaces
 {
     interface IUltraSonicSensor
     {
-        UltraSonicSensorRun RetrieveLatestUltraSonicRun();
+        ViewModelUltraSonicSensorRun RetrieveLatestUltraSonicRun();
 
-        List<UltraSonicSensorRun> RetrieveAllRuns();
+        List<ViewModelUltraSonicSensorRun> RetrieveAllRuns();
 
-        UltraSonicSensorRun RetrieveUltraSonicRun(int RunId);
+        ViewModelUltraSonicSensorRun RetrieveUltraSonicRun(long RunId);
 
         bool StartUltraSonicRun(UltraSonicRunRequest runrequest);
 
         bool IsUltraSonicServiceRunning();
 
-        
-
-
-
+        bool RemoveAllUltraSonicRuns();
     }
 }

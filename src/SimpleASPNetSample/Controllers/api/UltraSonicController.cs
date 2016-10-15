@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SimpleASPNetSample.Models;
 using SimpleASPNetSample.Services;
 using System;
@@ -11,16 +12,28 @@ namespace SimpleASPNetSample.Controllers.api
     [Route("api/[controller]")]
     public class UltraSonicController:Controller
     {
-        [HttpGet("statuses")]
+        [HttpGet("UltraSonicRuns")]
         public IActionResult GetStatus()
         {
+            var ultraSonicService = UltraSonicSensorService.Instance;
+            var AllRuns = ultraSonicService.RetrieveAllRuns();
 
-            //var ultraSonic = UltraSonicSensorService.Instance;
-            //UltraSonicSensorRequest NonAzureRetrieval = new UltraSonicSensorRequest();
-            //var task = ultraSonic.RetrieveSensorsData(NonAzureRetrieval);
-            //task.Wait();
+            string output = JsonConvert.SerializeObject(AllRuns);
 
-            return Ok(new { Amount = 108, Message = "Hello" }); //Ok(task.Result);
+
+            return Ok(new { AllRuns }); //Ok(task.Result);
+        }
+
+        [HttpGet("UltraSonicRuns/{id}")]
+        public IActionResult GetStatus(long id)
+        {
+            var ultraSonicService = UltraSonicSensorService.Instance;
+            var RunSpecified = ultraSonicService.RetrieveUltraSonicRun(id);
+
+            if (RunSpecified == null)
+                return NotFound();
+
+            return Ok(new { RunSpecified } ); //Ok(task.Result);
         }
 
         [HttpGet("lastrun")]
@@ -30,22 +43,16 @@ namespace SimpleASPNetSample.Controllers.api
             var ultraSonicService = UltraSonicSensorService.Instance;
             var lastRun =  ultraSonicService.RetrieveLatestUltraSonicRun();
             
-            return Ok(lastRun);
+            return Ok((new { lastRun });
         }
 
         [HttpPost("startrun")]
         public IActionResult StartRun([FromBody] UltraSonicRunRequest runrequest)
-        {
-           
+        {           
 
             var ultraSonicService = UltraSonicSensorService.Instance;
             ultraSonicService.StartUltraSonicRun(runrequest);
-            //UltraSonicSensorRequest UltraSonicRequest = new UltraSonicSensorRequest();
-
-
-            //var task = ultraSonic.RetrieveSensorsData(NonAzureRetrieval);
-            //task.Wait();
-
+          
             bool bResult = ultraSonicService.StartUltraSonicRun(runrequest);
 
             return Ok(true);
