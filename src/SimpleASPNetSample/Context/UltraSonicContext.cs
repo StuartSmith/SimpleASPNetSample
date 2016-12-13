@@ -11,13 +11,15 @@ namespace SimpleASPNetSample.Context
     /// <summary>
     /// To add a migration run following for example..
     ///
-    /// Add-Migration InitialMigration 
+    ///  Add-Migration AddPiNameValuePairs -Context UltraSonicContext
     /// 
     /// </summary>
     public class UltraSonicContext : DbContext
     {
         public DbSet<UltraSonicSensorRun> UltraSonicSensorRuns { get; set; }
         public DbSet<UltraSonicSensorRunMeasurement> UltraSonicSensorRunMeasurements { get; set; }
+
+       
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

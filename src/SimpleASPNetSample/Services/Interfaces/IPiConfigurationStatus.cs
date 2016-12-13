@@ -1,4 +1,5 @@
 ﻿using SimpleASPNetSample.Models;
+using SimpleASPNetSample.RestViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,9 @@ namespace SimpleASPNetSample.Services.Interfaces
 {
     interface IPiConfigurationStatus
     {
-       
+        List<ViewModelRestNameValuePair> PINameValuePairs { get; }
+
+        Task<bool> SetNameValuePairs(List<ViewModelRestNameValuePair> ViewModelRestNameValuePair);
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using SimpleASPNetSample.Services;
 using SimpleASPNetSample.Services.Interfaces;
+using SimpleASPNetSample.ServicesInternal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace SimpleASPNetSample.Models
             // Send Servo status data to azure
             var servoList = new List<Servo>();
             servoList.Add(servo);
-            await AzureConnectionService.Instance.SendServoData(servoList);
+            await AzureSendDataTo.Instance.SendServoData(servoList);
 
 
             Task<bool> RetrieveServos = Task<bool>.Factory.StartNew(() =>

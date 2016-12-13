@@ -10,8 +10,16 @@ using System.Threading.Tasks;
 
 namespace SimpleASPNetSample.Configuration
 {
-    public class PiNameValuePairDBSettings: IPiNameValuePairDBSettings
+     internal  class PiNameValuePairDBSettings: IPiNameValuePairDBSettings
     {
+
+        public void CopyKeyValuePair(IPiNameValuePair from, IPiNameValuePair to)
+        {
+            to.Name = from.Name;
+            to.Value = from.Value;
+        }
+
+
         public bool DeleteNameValuePair(string PairName)
         {
             using (var db = new PiGeneralContext())
@@ -30,12 +38,12 @@ namespace SimpleASPNetSample.Configuration
             return false;
         }
 
-        public List<PiNameValuePair> GetAllNameValuePairs()
+        public List<IPiNameValuePair> GetAllNameValuePairs()
         {
-            List<PiNameValuePair> retValues;
+            List<IPiNameValuePair> retValues;
             using (var db = new PiGeneralContext())
             {
-                retValues = db.PiNameValuePairs.ToList<PiNameValuePair>();
+                retValues = db.PiNameValuePairs.ToList<IPiNameValuePair>();
             }
             return retValues;
         }
@@ -76,7 +84,7 @@ namespace SimpleASPNetSample.Configuration
             return null;
         }
 
-        public void SetAllNameValuePairs(List<IPiNameValuePair> AzureValuePairs)
+        public bool SetAllNameValuePairs(List<IPiNameValuePair> AzureValuePairs)
         {
 
             foreach (var AzureValuePair in AzureValuePairs)
@@ -84,9 +92,12 @@ namespace SimpleASPNetSample.Configuration
                 var PairToFind = GetPiNameValuePair(AzureValuePair.Name);
                 if (PairToFind != null)
                 {
-                    SetNameValuePair(AzureValuePair.Name, AzureValuePair.Value);
+                    if (SetNameValuePair(AzureValuePair.Name, AzureValuePair.Value) == false)
+                        return false;
                 }
             }
+
+            return true;
         }
 
         public bool SetNameValuePair(string PairName, string Value)

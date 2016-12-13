@@ -4,8 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using SimpleASPNetSample.Models;
 using SimpleASPNetSample.Services.Interfaces;
-using SimpleASPNetSample.Threading;
-using System.Threading;
 using System.Diagnostics;
 using SimpleASPNetSample.Context;
 using SimpleASPNetSample.RestViewModel;

@@ -1,5 +1,6 @@
 ﻿using SimpleASPNetSample.Models;
 using SimpleASPNetSample.Services.Interfaces;
+using SimpleASPNetSample.ServicesInternal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,7 +99,7 @@ namespace SimpleASPNetSample.Services
             // Send light data to azure
             var lightList = new List<Light>();
             lightList.Add(light);        
-            await  AzureConnectionService.Instance.SendLightData(lightList);
+            await AzureSendDataTo.Instance.SendLightData(lightList);
 
             Task<bool> SetLights = Task<bool>.Factory.StartNew(() =>
             {

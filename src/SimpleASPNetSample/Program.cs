@@ -19,6 +19,11 @@ namespace SimpleASPNetSample
                 db.Database.Migrate();
             }
 
+            using (var db = new PiGeneralContext())
+            {
+                db.Database.Migrate();
+            }
+
 
             var host = new WebHostBuilder()
                 .UseKestrel()
