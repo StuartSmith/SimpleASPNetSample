@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SimpleASPNetSample.Models;
 using SimpleASPNetSample.RestViewModel;
 using SimpleASPNetSample.Configuration;
-using SimpleASPNetSample.Interfaces;
+using SimpleASPNetSample.Configuration.Interfaces;
 
 namespace SimpleASPNetSample.Services
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimpleASPNetSample.Interfaces
+namespace SimpleASPNetSample.Configuration.Interfaces
 {
     public interface IPiNameValuePair
     {

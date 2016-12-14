@@ -59,6 +59,8 @@ namespace SimpleASPNetSample.Configuration
             new PiNameValuePairDBSettings().CopyKeyValuePair(from, to);
         }
 
+       
+
         public string AzureIOTConnectionString
         {
             get { return (new PiNameValuePairDBSettings().GetPiNameValuePair(nameof(AzureIOTConnectionString))?.Value); }
