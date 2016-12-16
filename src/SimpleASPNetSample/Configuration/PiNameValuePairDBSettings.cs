@@ -118,6 +118,7 @@ namespace SimpleASPNetSample.Configuration
                     PairToModify.Value = Value;
                     PairToModify.Name = PairName;
                     db.PiNameValuePairs.Add(PairToModify);
+                    db.SaveChanges();
                 }
 
             }
@@ -137,7 +138,7 @@ namespace SimpleASPNetSample.Configuration
         public bool SetValueIfOneDoesNotExist(string PairName, string Value)
         {
             var PairToFind = GetPiNameValuePair(PairName);
-            if (PairToFind != null)
+            if (PairToFind == null)
             {
                 SetNameValuePair(PairName, Value);
             }
