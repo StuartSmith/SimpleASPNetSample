@@ -7,6 +7,15 @@
      margin-top:20px; 
 }
 
+
+
+.Button-Margin-LeftRight
+{
+     
+     margin-left:5px; 
+     margin-left:5px; 
+}
+
 .columndescription {
     min-width: 250px;
     background-color:#69F;
@@ -39,12 +48,18 @@
 
 }
 
-
-
 .top-buffer { margin-top:20px; }
 
 .type-splitter {
     margin-bottom: 20px;
     color: rebeccapurple;
 }
+
+table.ConfigurationTable  tr td:last-child {
+    white-space: nowrap;
+    width: 1px;
+}
+
+
+
  

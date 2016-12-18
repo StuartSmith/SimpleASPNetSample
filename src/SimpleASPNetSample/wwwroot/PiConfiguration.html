@@ -14,29 +14,77 @@
                     <h3 class="panel-title">Pi Configuration and Statuses</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="form-group">
-                            <h2 class="col-sm-1 control-label">GET:</h2>
-                            <div class="col-sm-10 col-xs-10 col-md-10">
-                                <h2> /api/lights/statuses</h2>
-                            </div>
-                        </div>
-                        <div class="col-lg-offset6 col-md-ofset-6 col-sm-offset-6 col-xs-offset-7">
-                            <table style="width:50%">
+                    <div id="rowToggle" style="margin-top: 20px;"  class="row">
+                        <table class="table ConfigurationTable table-striped table-bordered">
+                            <tbody>
                                 <tr>
-                                   <th><button id="ButtonLightStatuses" type="button" class="btn btn-lg btn-success control ">Save Values</button></th>
-                                    <th ="10"> </th>
-                                    <th><button id="ButtonLightStatuses" type="button" class="btn btn-lg btn-success control ">Save Values</button></th>
+                                    <td><h3>Allow Sending Any Data to Azure:</h3></td>
+                                    <td>
+                                        <label class="switch">
+                                            <input type="checkbox" id="tglAllowSendingofData">
+                                            <div class="slider round">
+                                            </div>
+                                            <input />
+                                        </label>
+                                    </td>
                                 </tr>
-                            </table>
-                            <table style="width:50%">
                                 <tr>
-                                    <th><button id="ButtonLightStatuses" type="button" class="btn btn-lg btn-success control ">Save Values</button></th>
+                                    <td><h3>Allow Sending Toast Light Data:</h3></td>
+                                    <td>
+                                        <label class="switch">
+                                            <input type="checkbox" id="tglAllowSendingToastLightData">
+                                            <div class="slider round">
+                                            </div>
+                                            <input />
+                                        </label>
+                                    </td>
                                 </tr>
-                            </table>
-                        </div>
+                                <tr>
+                                    <td><h3>Allow Sending Toast Servo Data:</h3></td>
+                                    <td>
+                                        <label class="switch">
+                                            <input type="checkbox" id="tglAllowSendingToastServoData">
+                                            <div class="slider round">
+                                            </div>
+                                            <input />
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><h3>Allow Sending Ultra Sonic Data:</h3></td>
+                                    <td>
+                                        <label class="switch">
+                                            <input type="checkbox" id="tglAllowSendingUltraSonicData">
+                                            <div class="slider round">
+                                            </div>
+                                            <input />
+                                        </label>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>                       
                     </div>
-                    <span id="lightStatusesResult"></span>
+                    <div id="RowAzureConnectinString" class="row" style="margin-top:20px;">
+                        <h3 style="margin-left:5px">Azure Connection String:</h3>
+                        <textarea class="form-control" rows="5" id="AzureConnectinString" style="width:99%;margin:5px"></textarea>
+                    </div>
+                    <div id="RowAzureToastServiceURL" class="row" style="margin-top:20px;">
+                        <h3 style="margin-left:5px">URL For Sending Toast Requests:</h3>
+                        <textarea class="form-control" rows="5" id="AzureToastServiceURL" style="width:99%;margin:5px"></textarea>
+                    </div>
+                    <div id="rowRefreshSave" class="row" style="margin-top:20px;">                       
+                        <div>
+                             
+                        </div>
+                        <div class="col-lg-offset-8 col-md-ofset-8 col-sm-offset-6 col-xs-offset-4">
+                            <ul class="list-inline">
+                                <li>
+                                    <button id="ButtonConfigurationSave" type="button" class="btn btn-lg btn-success control Button-Margin-LeftRight">Save Values</button>
+                                </li>
+                                <li>
+                                    <button id="ButtonConfigurationRefresh" type="button" class="btn btn-lg btn-primary control Button-Margin-LeftRight ">Refresh Values</button>
+                                </li>
+                          </ul>
                 </div>
 
             </div>
