@@ -110,6 +110,7 @@ namespace SimpleASPNetSample.Configuration
                 {
                     PairToModify.Value = Value;
                     db.PiNameValuePairs.Update(PairToModify);
+                    db.SaveChanges();
                     return true;
                 }
                 else
