@@ -45,10 +45,12 @@ namespace SimpleASPNetSample.Controllers.api
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]List<ViewModelRestNameValuePair> values)
+        public IActionResult Post([FromBody]List<ViewModelRestNameValuePair> values)
         {
             new AzurePiConfiguraton().UpdateValues((values.ToList<IPiNameValuePair>()));
-            
+
+            return Created($"/api/configruation", values);
+      
         }
 
         // PUT api/values/5
@@ -58,10 +60,6 @@ namespace SimpleASPNetSample.Controllers.api
             new PiNameValuePairDBSettings().SetNameValuePair(name, value);
         }
 
-        //// DELETE api/values/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+      
     }
 }
